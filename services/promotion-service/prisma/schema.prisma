@@ -24,3 +24,18 @@ model Coupon {
   id         String   @id @default(cuid())
   updatedAt  DateTime @updatedAt
 }
+
+model Rule {
+  createdAt    DateTime             @default(now())
+  discount     Int
+  discountType EnumRuleDiscountType
+  endTo        Int
+  id           String               @id @default(cuid())
+  startFrom    Int
+  updatedAt    DateTime             @updatedAt
+}
+
+enum EnumRuleDiscountType {
+  Percent
+  Fixed
+}

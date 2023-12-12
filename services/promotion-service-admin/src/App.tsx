@@ -13,6 +13,10 @@ import { CouponList } from "./coupon/CouponList";
 import { CouponCreate } from "./coupon/CouponCreate";
 import { CouponEdit } from "./coupon/CouponEdit";
 import { CouponShow } from "./coupon/CouponShow";
+import { RuleList } from "./rule/RuleList";
+import { RuleCreate } from "./rule/RuleCreate";
+import { RuleEdit } from "./rule/RuleEdit";
+import { RuleShow } from "./rule/RuleShow";
 import { jwtAuthProvider } from "./auth-provider/ra-auth-jwt";
 
 const App = (): React.ReactElement => {
@@ -52,6 +56,13 @@ const App = (): React.ReactElement => {
           edit={CouponEdit}
           create={CouponCreate}
           show={CouponShow}
+        />
+        <Resource
+          name="Rule"
+          list={RuleList}
+          edit={RuleEdit}
+          create={RuleCreate}
+          show={RuleShow}
         />
       </Admin>
     </div>
