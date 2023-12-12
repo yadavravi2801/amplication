@@ -11,14 +11,27 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IntFilter } from "../../util/IntFilter";
+import { CouponListRelationFilter } from "../../coupon/base/CouponListRelationFilter";
+import { ValidateNested, IsOptional, IsEnum } from "class-validator";
 import { Type } from "class-transformer";
-import { IsOptional, IsEnum } from "class-validator";
+import { IntFilter } from "../../util/IntFilter";
 import { EnumRuleDiscountType } from "./EnumRuleDiscountType";
 import { StringFilter } from "../../util/StringFilter";
 
 @InputType()
 class RuleWhereInput {
+  @ApiProperty({
+    required: false,
+    type: () => CouponListRelationFilter,
+  })
+  @ValidateNested()
+  @Type(() => CouponListRelationFilter)
+  @IsOptional()
+  @Field(() => CouponListRelationFilter, {
+    nullable: true,
+  })
+  coupons?: CouponListRelationFilter;
+
   @ApiProperty({
     required: false,
     type: IntFilter,

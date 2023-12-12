@@ -10,7 +10,12 @@ https://docs.amplication.com/how-to/custom-code
 ------------------------------------------------------------------------------
   */
 import { PrismaService } from "../../prisma/prisma.service";
-import { Prisma, Coupon } from "@prisma/client";
+
+import {
+  Prisma,
+  Coupon, // @ts-ignore
+  Rule,
+} from "@prisma/client";
 
 export class CouponServiceBase {
   constructor(protected readonly prisma: PrismaService) {}
@@ -45,5 +50,13 @@ export class CouponServiceBase {
     args: Prisma.SelectSubset<T, Prisma.CouponDeleteArgs>
   ): Promise<Coupon> {
     return this.prisma.coupon.delete(args);
+  }
+
+  async getRule(parentId: string): Promise<Rule | null> {
+    return this.prisma.coupon
+      .findUnique({
+        where: { id: parentId },
+      })
+      .rule();
   }
 }

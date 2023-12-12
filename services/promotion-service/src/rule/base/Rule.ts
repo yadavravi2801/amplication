@@ -11,12 +11,29 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDate, IsInt, IsEnum, IsString } from "class-validator";
+import { Coupon } from "../../coupon/base/Coupon";
+import {
+  ValidateNested,
+  IsOptional,
+  IsDate,
+  IsInt,
+  IsEnum,
+  IsString,
+} from "class-validator";
 import { Type } from "class-transformer";
 import { EnumRuleDiscountType } from "./EnumRuleDiscountType";
 
 @ObjectType()
 class Rule {
+  @ApiProperty({
+    required: false,
+    type: () => [Coupon],
+  })
+  @ValidateNested()
+  @Type(() => Coupon)
+  @IsOptional()
+  coupons?: Array<Coupon>;
+
   @ApiProperty({
     required: true,
   })

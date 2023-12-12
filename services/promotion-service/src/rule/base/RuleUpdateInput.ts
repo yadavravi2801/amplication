@@ -11,11 +11,25 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsOptional, IsEnum } from "class-validator";
+import { CouponUpdateManyWithoutRulesInput } from "./CouponUpdateManyWithoutRulesInput";
+import { ValidateNested, IsOptional, IsInt, IsEnum } from "class-validator";
+import { Type } from "class-transformer";
 import { EnumRuleDiscountType } from "./EnumRuleDiscountType";
 
 @InputType()
 class RuleUpdateInput {
+  @ApiProperty({
+    required: false,
+    type: () => CouponUpdateManyWithoutRulesInput,
+  })
+  @ValidateNested()
+  @Type(() => CouponUpdateManyWithoutRulesInput)
+  @IsOptional()
+  @Field(() => CouponUpdateManyWithoutRulesInput, {
+    nullable: true,
+  })
+  coupons?: CouponUpdateManyWithoutRulesInput;
+
   @ApiProperty({
     required: false,
     type: Number,

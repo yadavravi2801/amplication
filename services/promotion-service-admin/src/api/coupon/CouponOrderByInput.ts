@@ -4,5 +4,6 @@ export type CouponOrderByInput = {
   couponCode?: SortOrder;
   createdAt?: SortOrder;
   id?: SortOrder;
+  ruleId?: SortOrder;
   updatedAt?: SortOrder;
 };

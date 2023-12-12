@@ -11,7 +11,9 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsOptional } from "class-validator";
+import { IsString, IsOptional, ValidateNested } from "class-validator";
+import { RuleWhereUniqueInput } from "../../rule/base/RuleWhereUniqueInput";
+import { Type } from "class-transformer";
 
 @InputType()
 class CouponUpdateInput {
@@ -25,6 +27,18 @@ class CouponUpdateInput {
     nullable: true,
   })
   couponCode?: string;
+
+  @ApiProperty({
+    required: false,
+    type: () => RuleWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => RuleWhereUniqueInput)
+  @IsOptional()
+  @Field(() => RuleWhereUniqueInput, {
+    nullable: true,
+  })
+  rule?: RuleWhereUniqueInput;
 }
 
 export { CouponUpdateInput as CouponUpdateInput };

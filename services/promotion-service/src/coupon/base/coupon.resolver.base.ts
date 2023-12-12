@@ -26,6 +26,7 @@ import { CouponFindUniqueArgs } from "./CouponFindUniqueArgs";
 import { CreateCouponArgs } from "./CreateCouponArgs";
 import { UpdateCouponArgs } from "./UpdateCouponArgs";
 import { DeleteCouponArgs } from "./DeleteCouponArgs";
+import { Rule } from "../../rule/base/Rule";
 import { CouponService } from "../coupon.service";
 @common.UseGuards(GqlDefaultAuthGuard, gqlACGuard.GqlACGuard)
 @graphql.Resolver(() => Coupon)
@@ -88,7 +89,13 @@ export class CouponResolverBase {
   async createCoupon(@graphql.Args() args: CreateCouponArgs): Promise<Coupon> {
     return await this.service.createCoupon({
       ...args,
-      data: args.data,
+      data: {
+        ...args.data,
+
+        rule: {
+          connect: args.data.rule,
+        },
+      },
     });
   }
 
@@ -105,7 +112,13 @@ export class CouponResolverBase {
     try {
       return await this.service.updateCoupon({
         ...args,
-        data: args.data,
+        data: {
+          ...args.data,
+
+          rule: {
+            connect: args.data.rule,
+          },
+        },
       });
     } catch (error) {
       if (isRecordNotFoundError(error)) {
@@ -136,5 +149,24 @@ export class CouponResolverBase {
       }
       throw error;
     }
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @graphql.ResolveField(() => Rule, {
+    nullable: true,
+    name: "rule",
+  })
+  @nestAccessControl.UseRoles({
+    resource: "Rule",
+    action: "read",
+    possession: "any",
+  })
+  async getRule(@graphql.Parent() parent: Coupon): Promise<Rule | null> {
+    const result = await this.service.getRule(parent.id);
+
+    if (!result) {
+      return null;
+    }
+    return result;
   }
 }

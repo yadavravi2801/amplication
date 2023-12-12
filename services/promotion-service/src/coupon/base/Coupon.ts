@@ -11,8 +11,9 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { ObjectType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsDate } from "class-validator";
+import { IsString, IsDate, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
+import { Rule } from "../../rule/base/Rule";
 
 @ObjectType()
 class Coupon {
@@ -39,6 +40,14 @@ class Coupon {
   @IsString()
   @Field(() => String)
   id!: string;
+
+  @ApiProperty({
+    required: true,
+    type: () => Rule,
+  })
+  @ValidateNested()
+  @Type(() => Rule)
+  rule?: Rule;
 
   @ApiProperty({
     required: true,

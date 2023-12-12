@@ -13,7 +13,8 @@ import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
 import { StringFilter } from "../../util/StringFilter";
 import { Type } from "class-transformer";
-import { IsOptional } from "class-validator";
+import { IsOptional, ValidateNested } from "class-validator";
+import { RuleWhereUniqueInput } from "../../rule/base/RuleWhereUniqueInput";
 
 @InputType()
 class CouponWhereInput {
@@ -38,6 +39,18 @@ class CouponWhereInput {
     nullable: true,
   })
   id?: StringFilter;
+
+  @ApiProperty({
+    required: false,
+    type: () => RuleWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => RuleWhereUniqueInput)
+  @IsOptional()
+  @Field(() => RuleWhereUniqueInput, {
+    nullable: true,
+  })
+  rule?: RuleWhereUniqueInput;
 }
 
 export { CouponWhereInput as CouponWhereInput };

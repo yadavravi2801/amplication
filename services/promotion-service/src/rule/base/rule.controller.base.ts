@@ -26,6 +26,9 @@ import { Rule } from "./Rule";
 import { RuleFindManyArgs } from "./RuleFindManyArgs";
 import { RuleWhereUniqueInput } from "./RuleWhereUniqueInput";
 import { RuleUpdateInput } from "./RuleUpdateInput";
+import { CouponFindManyArgs } from "../../coupon/base/CouponFindManyArgs";
+import { Coupon } from "../../coupon/base/Coupon";
+import { CouponWhereUniqueInput } from "../../coupon/base/CouponWhereUniqueInput";
 
 @swagger.ApiBearerAuth()
 @common.UseGuards(defaultAuthGuard.DefaultAuthGuard, nestAccessControl.ACGuard)
@@ -198,5 +201,108 @@ export class RuleControllerBase {
       }
       throw error;
     }
+  }
+
+  @common.UseInterceptors(AclFilterResponseInterceptor)
+  @common.Get("/:id/coupons")
+  @ApiNestedQuery(CouponFindManyArgs)
+  @nestAccessControl.UseRoles({
+    resource: "Coupon",
+    action: "read",
+    possession: "any",
+  })
+  async findCoupons(
+    @common.Req() request: Request,
+    @common.Param() params: RuleWhereUniqueInput
+  ): Promise<Coupon[]> {
+    const query = plainToClass(CouponFindManyArgs, request.query);
+    const results = await this.service.findCoupons(params.id, {
+      ...query,
+      select: {
+        couponCode: true,
+        createdAt: true,
+        id: true,
+
+        rule: {
+          select: {
+            id: true,
+          },
+        },
+
+        updatedAt: true,
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @common.Post("/:id/coupons")
+  @nestAccessControl.UseRoles({
+    resource: "Rule",
+    action: "update",
+    possession: "any",
+  })
+  async connectCoupons(
+    @common.Param() params: RuleWhereUniqueInput,
+    @common.Body() body: CouponWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      coupons: {
+        connect: body,
+      },
+    };
+    await this.service.updateRule({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Patch("/:id/coupons")
+  @nestAccessControl.UseRoles({
+    resource: "Rule",
+    action: "update",
+    possession: "any",
+  })
+  async updateCoupons(
+    @common.Param() params: RuleWhereUniqueInput,
+    @common.Body() body: CouponWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      coupons: {
+        set: body,
+      },
+    };
+    await this.service.updateRule({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Delete("/:id/coupons")
+  @nestAccessControl.UseRoles({
+    resource: "Rule",
+    action: "update",
+    possession: "any",
+  })
+  async disconnectCoupons(
+    @common.Param() params: RuleWhereUniqueInput,
+    @common.Body() body: CouponWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      coupons: {
+        disconnect: body,
+      },
+    };
+    await this.service.updateRule({
+      where: params,
+      data,
+      select: { id: true },
+    });
   }
 }

@@ -22,10 +22,13 @@ model Coupon {
   couponCode String   @unique
   createdAt  DateTime @default(now())
   id         String   @id @default(cuid())
+  rule       Rule     @relation(fields: [ruleId], references: [id])
+  ruleId     String
   updatedAt  DateTime @updatedAt
 }
 
 model Rule {
+  coupons      Coupon[]
   createdAt    DateTime             @default(now())
   discount     Int
   discountType EnumRuleDiscountType

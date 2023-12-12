@@ -47,11 +47,24 @@ export class CouponControllerBase {
   })
   async createCoupon(@common.Body() data: CouponCreateInput): Promise<Coupon> {
     return await this.service.createCoupon({
-      data: data,
+      data: {
+        ...data,
+
+        rule: {
+          connect: data.rule,
+        },
+      },
       select: {
         couponCode: true,
         createdAt: true,
         id: true,
+
+        rule: {
+          select: {
+            id: true,
+          },
+        },
+
         updatedAt: true,
       },
     });
@@ -77,6 +90,13 @@ export class CouponControllerBase {
         couponCode: true,
         createdAt: true,
         id: true,
+
+        rule: {
+          select: {
+            id: true,
+          },
+        },
+
         updatedAt: true,
       },
     });
@@ -103,6 +123,13 @@ export class CouponControllerBase {
         couponCode: true,
         createdAt: true,
         id: true,
+
+        rule: {
+          select: {
+            id: true,
+          },
+        },
+
         updatedAt: true,
       },
     });
@@ -133,11 +160,24 @@ export class CouponControllerBase {
     try {
       return await this.service.updateCoupon({
         where: params,
-        data: data,
+        data: {
+          ...data,
+
+          rule: {
+            connect: data.rule,
+          },
+        },
         select: {
           couponCode: true,
           createdAt: true,
           id: true,
+
+          rule: {
+            select: {
+              id: true,
+            },
+          },
+
           updatedAt: true,
         },
       });
@@ -172,6 +212,13 @@ export class CouponControllerBase {
           couponCode: true,
           createdAt: true,
           id: true,
+
+          rule: {
+            select: {
+              id: true,
+            },
+          },
+
           updatedAt: true,
         },
       });

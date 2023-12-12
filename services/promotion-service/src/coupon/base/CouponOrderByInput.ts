@@ -61,6 +61,17 @@ class CouponOrderByInput {
   @Field(() => SortOrder, {
     nullable: true,
   })
+  ruleId?: SortOrder;
+
+  @ApiProperty({
+    required: false,
+    enum: ["asc", "desc"],
+  })
+  @IsOptional()
+  @IsEnum(SortOrder)
+  @Field(() => SortOrder, {
+    nullable: true,
+  })
   updatedAt?: SortOrder;
 }
 
